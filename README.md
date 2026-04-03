@@ -1,4 +1,7 @@
 # 📞 SmartCall CRM Agent
+
+**THIS FILES ARE MEANT FOR PERSONAL USE. DO NOT DISCLOSE THIS FILES AS YOURS**
+
 **Real-time call enrichment using AI (Grok) and n8n automation**
 
 SmartCall CRM Agent is an automated system designed to instantly identify employees, partners, or customers during incoming calls. By intercepting calls, the system queries a database to verify subscription status and payment history, generating an AI-powered summary that pops up on the screen before the operator even answers.
