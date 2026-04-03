@@ -1,43 +1,41 @@
 # 📞 SmartCall CRM Agent
-**THIS FILES ARE MEANT FOR PERSONAL USE. DO NOT DISCLOSE THIS FILES AS YOURS**
+**Real-time call enrichment using AI (Grok) and n8n automation**
 
-**Arricchimento chiamate in tempo reale con AI (Grok) e n8n**
-
-SmartCall CRM Agent è un sistema automatizzato che riconosce istantaneamente i dipendenti, i partner o i clienti che chiamano l'azienda. Intercettando la chiamata in entrata, il sistema interroga un database per verificare lo stato dell'abbonamento e gli ultimi pagamenti, generando un messaggio personalizzato tramite Intelligenza Artificiale che appare sullo schermo all'inizio della telefonata.
+SmartCall CRM Agent is an automated system designed to instantly identify employees, partners, or customers during incoming calls. By intercepting calls, the system queries a database to verify subscription status and payment history, generating an AI-powered summary that pops up on the screen before the operator even answers.
 
 ---
 
-## 🔄 Flusso dei Dati (Come Funziona)
-1. **Intercettazione Chiamata:** L'applicazione **Automate** rileva una chiamata in entrata sul telefono aziendale.
-2. **Estrazione Numero:** Automate estrae il numero di telefono e lo invia tramite Webhook a n8n.
-3. **Controllo Database:** L'orchestrazione su **n8n** interroga il database per verificare se il numero è associato a un partner/dipendente e controlla lo storico dei pagamenti.
-4. **Generazione Messaggio (AI):** Se il numero è presente, i dati vengono passati a una LLM (**Modello Grok di xAI**) che elabora un breve testo riassuntivo (es: *"Abbonamento attivo, ultimo pagamento 02/04. Cliente affidabile"*).
-5. **Notifica su Schermo:** n8n risponde al Webhook di Automate, che fa apparire un messaggio rapido (pop-up) sullo schermo all'inizio della chiamata.
+## 🔄 Data Flow & Architecture
+1. **Call Interception:** The **Automate** app (Android) detects an incoming call.
+2. **Data Extraction:** Automate extracts the phone number and sends it via **Webhook** to n8n.
+3. **Database Lookup:** The **n8n** workflow queries the database (PostgreSQL/SQL) to match the number with a partner profile and retrieve payment logs.
+4. **AI Processing:** Data is passed to the **Grok (xAI)** LLM, which synthesizes a concise, actionable brief (e.g., *"Active partner, last payment received on April 1st. No outstanding balance."*).
+5. **Instant HUD:** n8n sends the response back to Automate, which triggers a high-priority notification (pop-up) on the device screen.
 
 ---
 
 ## 🛠️ Tech Stack
-* **Rilevamento Chiamate:** [Automate](https://llamalab.com/automate/) (per Android)
-* **Orchestrazione & Logica:** [n8n](https://n8n.io/)
-* **Database:** SQL / PostgreSQL (Gestione anagrafiche e pagamenti)
-* **Cervello AI:** Modello LLM di **Grok (xAI)** per la sintesi dei dati
-* **Protocollo di Comunicazione:** Webhooks (HTTP REST API)
+* **Call Handling:** [Automate for Android](https://llamalab.com/automate/)
+* **Logic Orchestration:** [n8n](https://n8n.io/)
+* **Database:** PostgreSQL / Supabase (CRM data & Ledger)
+* **AI Engine:** **Grok (xAI)** Large Language Model
+* **Communication:** REST API / Webhooks
 
 ---
 
-## 🚀 Funzionalità Principali
-* **Riconoscimento Istantaneo:** Identifica chi chiama prima ancora di rispondere.
-* **Prevenzione del Rischio:** Evidenzia subito se un partner ha pagamenti in sospeso o abbonamenti scaduti.
-* **Sintesi Intelligente:** L'AI non mostra dati grezzi, ma crea un riassunto discorsivo, amichevole e facile da leggere in pochissimi secondi.
-* **Zero Latenza:** Progettato per essere eseguito nei pochissimi secondi tra lo squillo e la risposta.
+## 🚀 Key Features
+* **Zero-Latency Insights:** Designed to process and display data within the first few rings.
+* **Risk Mitigation:** Highlights overdue payments or expired subscriptions instantly.
+* **Intelligent Summarization:** Instead of raw data, the agent provides a natural language brief, making it easy for the user to read while the phone is ringing.
+* **Seamless Integration:** Bridges the gap between mobile telephony and corporate databases.
 
 ---
 
-## 📁 Struttura della Repository
-* `workflows/`: Contiene il file `.json` dell'automazione n8n.
-* `database/`: Contiene lo script `.sql` per creare la tabella dei partner/dipendenti e dei pagamenti.
-* `automate/`: Contiene il flusso di Automate (se esportabile).
-
+## 📁 Repository Structure
+* `workflows/`: n8n automation `.json` files.
+* `database/`: SQL scripts for table schemas (Partners & Payments).
+* `automate/`: Exported Automate flows.
+  
 ---
 
-> **Nota:** Questo progetto dimostra competenze avanzate nell'integrazione tra sistemi mobile, database locali/cloud e modelli linguistici di ultima generazione (LLM).
+> **Note:** This project showcases advanced skills in CTI (Computer Telephony Integration), database management, and LLM implementation.
