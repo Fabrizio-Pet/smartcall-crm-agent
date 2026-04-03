@@ -1,0 +1,200 @@
+{
+  "name": "SmartCall CRM Agent",
+  "nodes": [
+    {
+      "parameters": {
+        "multipleMethods": true,
+        "httpMethod": [
+          "POST"
+        ],
+        "path": "chiamata-in-arrivo",
+        "responseMode": "lastNode",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        -704,
+        0
+      ],
+      "id": "webhook-trigger",
+      "name": "Webhook"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "Crea il messaggio per il cliente",
+        "messages": {
+          "messageValues": [
+            {
+              "message": "=Sei un assistente personale. Ti fornirò i dati di un cliente che sta chiamando presi dal database. Il tuo compito è creare un messaggio brevissimo per il mio telefono. Dì chi è il cliente, la data dell'ultimo pagamento e se è in regola. Se è in ritardo, sii conciso ma chiaro. I dati sono: Nome {{ $json.nome }}, Data Ultimo Pagamento: {{ $json.data_pagamento }}, Stato: {{ $json.stato_pagamento }}. Rispondi in massimo 20 parole"
+            }
+          ]
+        },
+        "batching": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "typeVersion": 1.9,
+      "position": [
+        192,
+        0
+      ],
+      "id": "llm-chain",
+      "name": "Basic LLM Chain"
+    },
+    {
+      "parameters": {
+        "model": "llama-3.3-70b-versatile",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGroq",
+      "typeVersion": 1,
+      "position": [
+        272,
+        224
+      ],
+      "id": "groq-model",
+      "name": "Groq Chat Model"
+    },
+    {
+      "parameters": {
+        "operation": "getAll",
+        "tableId": "clienti",
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "telefono",
+              "condition": "eq",
+              "keyValue": "={{ $json.telefono }}"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [
+        -256,
+        0
+      ],
+      "id": "supabase-get",
+      "name": "Get a row",
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "id-1",
+              "name": "telefono",
+              "value": "={{ $json.body.phone }}",
+              "type": "string"
+            }
+          ]
+        },
+        "includeOtherFields": true,
+        "options": {}
+      },
+      "id": "prepare-number",
+      "name": "Prepara Numero",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -480,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "id-1",
+              "leftValue": "={{ $itemIndex === 0 && $input.all().length > 0 }}",
+              "operator": {
+                "type": "boolean",
+                "operation": "true"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "if-number-found",
+      "name": "Numero Trovato?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        -32,
+        0
+      ]
+    }
+  ],
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "prepare-number",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Groq Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "llm-chain",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get a row": {
+      "main": [
+        [
+          {
+            "node": "if-number-found",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Prepara Numero": {
+      "main": [
+        [
+          {
+            "node": "Get a row",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Numero Trovato?": {
+      "main": [
+        [
+          {
+            "node": "llm-chain",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  }
+}
