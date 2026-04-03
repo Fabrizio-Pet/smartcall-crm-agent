@@ -2,7 +2,7 @@
 
 **THIS FILES ARE MEANT FOR PERSONAL USE. DO NOT DISCLOSE THIS FILES AS YOURS**
 
-**Real-time call enrichment using AI (Grok) and n8n automation**
+**Real-time call enrichment using AI (Groq) and n8n automation**
 
 SmartCall CRM Agent is an automated system designed to instantly identify employees, partners, or customers during incoming calls. By intercepting calls, the system queries a database to verify subscription status and payment history, generating an AI-powered summary that pops up on the screen before the operator even answers.
 
@@ -21,7 +21,7 @@ SmartCall CRM Agent is an automated system designed to instantly identify employ
 * **Call Handling:** [Automate for Android](https://llamalab.com/automate/)
 * **Logic Orchestration:** [n8n](https://n8n.io/)
 * **Database:** PostgreSQL / Supabase (CRM data & Ledger)
-* **AI Engine:** **Grok (xAI)** Large Language Model
+* **AI Engine:** **Groq (xAI)** Large Language Model
 * **Communication:** REST API / Webhooks
 
 ---
